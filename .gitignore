@@ -30,3 +30,6 @@ data/genesis/caffe/*
 
 # IPython Notebook
 .ipynb_checkpoints/
+
+# Pytorch-lightning
+lightning_logs/
