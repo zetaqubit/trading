@@ -2,48 +2,29 @@
 
 import unittest
 
-from data import daily_dataset as ds
+import pandas as pd
+import torch as th
+
+from data import daily_dataset
+from data import daily_df
 from data import date_range as dr
 
 
-class DailyDatasetTest(unittest.TestCase):
+class StockSeqDatasetTest(unittest.TestCase):
 
-  def test_load_df_one_ticker(self):
-    df = ds.load_df_one_ticker('GOOG')
-    self.assertEqual(
-        list(df.columns),
-        ['date', 'volume', 'open', 'high', 'low', 'close', 'adjclose'])
-    self.assertGreater(len(df), 3990)
-    self.assertFalse(df.isnull().any().any())
-    self.assertEqual(df.date.dt.strftime('%Y-%m-%d').iloc[0], '2004-08-19')
+  def test_multiple_columns(self):
+    df = pd.DataFrame({
+      'a': [0, 1, 2, 3, 4],
+      'b': [10.0, 11.0, 12.0, 13.0, 14.0],
+    })
 
-  def test_load_df_one_ticker_date_range(self):
-    df = ds.load_df_one_ticker('GOOG', dr.DateRange('2020-01-06', '2020-01-10'))
-    self.assertEqual(
-        list(df.date.dt.strftime('%Y-%m-%d')),
-        ['2020-01-06', '2020-01-07', '2020-01-08', '2020-01-09'])
-    
-  def test_load_df_one(self):
-    df = ds.load_df(ds.Cfg(['GOOG']))
-    cols = ['volume', 'open', 'high', 'low', 'close', 'adjclose']
-    self.assertEqual(list(df.columns), ['date'] + ['GOOG_' + col for col in cols])
-    self.assertGreater(len(df), 3990)
-    self.assertFalse(df.isnull().any().any())
+    ds = daily_dataset.StockSeqDataset(df, cols=['a', 'b'], window_size=3)
 
-  def test_load_df_multiple(self):
-    df = ds.load_df(ds.Cfg(['GOOG', 'FB']))
-    cols = ['volume', 'open', 'high', 'low', 'close', 'adjclose']
-    self.assertEqual(
-        list(df.columns),
-        ['date'] + ['GOOG_' + col for col in cols] + ['FB_' + col for col in cols])
-    self.assertGreater(len(df), 3990)
+    self.assertEqual(len(ds), 3)
+    self.assertTrue(th.equal(ds[0]['a'], th.FloatTensor([0, 1, 2])))
+    self.assertTrue(th.equal(ds[0]['b'], th.FloatTensor([10, 11, 12])))
+    self.assertTrue(th.equal(ds[1]['a'], th.FloatTensor([1, 2, 3])))
+    self.assertTrue(th.equal(ds[1]['b'], th.FloatTensor([11, 12, 13])))
+    self.assertTrue(th.equal(ds[2]['a'], th.FloatTensor([2, 3, 4])))
+    self.assertTrue(th.equal(ds[2]['b'], th.FloatTensor([12, 13, 14])))
 
-    df_fb = df.dropna()
-    self.assertEqual(df_fb.date.dt.strftime('%Y-%m-%d').iloc[0], '2012-05-18')
-
-  def test_load_df_date_range(self):
-    df = ds.load_df(ds.Cfg(['GOOG', 'FB']), dr.DateRange('2020-01-06', '2020-01-10'))
-    self.assertEqual(
-        list(df.date.dt.strftime('%Y-%m-%d')),
-        ['2020-01-06', '2020-01-07', '2020-01-08', '2020-01-09'])
-    self.assertFalse(df.isnull().any().any())
