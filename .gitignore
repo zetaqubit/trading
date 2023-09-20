@@ -19,6 +19,9 @@ bazel-blaze_root
 # Android Studio
 .idea/
 
+# VS Code
+*.code-workspace
+
 # Python
 *.pyc
 
