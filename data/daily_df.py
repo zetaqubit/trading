@@ -11,12 +11,12 @@ COL_DATE = 'date'
 @dataclass
 class Cfg:
   tickers: List
-  root_dir: str = '~/data/stock/kaggle/full_history/'
+  root_dir: str = '~/data/zetaqubit/trading/kaggle/full_history/'
 
 
 def load_df_one_ticker(ticker, date_range: dr.DateRange = None):
   """Loads the DataFrame for ticker between [start_date, end_date)."""
-  df = pd.read_csv(f'~/data/stock/kaggle/full_history/{ticker}.csv')
+  df = pd.read_csv(f'~/data/zetaqubit/trading/kaggle/full_history/{ticker}.csv')
   df[COL_DATE] = pd.to_datetime(df[COL_DATE])
   if date_range:
     if date_range.start:
