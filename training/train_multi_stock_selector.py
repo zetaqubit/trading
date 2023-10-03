@@ -106,6 +106,7 @@ def eval(model, dl):
     )
   model.train()
 
+print('Starting training.')
 
 save_interval = 10
 epochs = 100
