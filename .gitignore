@@ -30,3 +30,7 @@ bazel-blaze_root
 
 # Pytorch-lightning
 lightning_logs/
+
+# gym-trading-env
+data_cache
+render_logs

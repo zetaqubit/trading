@@ -1,6 +1,9 @@
+gym-trading-env
+yfinance
 matplotlib
 numpy
 pandas
 pytest
 torch
 pytorch-lightning
+absl-py
