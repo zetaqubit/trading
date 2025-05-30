@@ -7,3 +7,4 @@ pytest
 torch
 pytorch-lightning
 absl-py
+alpaca-py
