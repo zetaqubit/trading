@@ -57,7 +57,8 @@ def main(argv):
         symbol_or_symbols=FLAGS.instrument,
         timeframe=timeframe,
         start=start_date,
-        end=end_date
+        end=end_date,
+        adjustment='all',
     )
 
     # Get bars
